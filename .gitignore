@@ -1,3 +1,4 @@
 *.exe
 /librdkafka.redist.1.0.0
 /zk-single-kafka-single
+/zk-multiple-kafka-multiple

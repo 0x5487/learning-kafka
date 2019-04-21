@@ -1,5 +1,8 @@
 # learning-kafka
 
+#### start kafka cluster
+docker-compose --file ./cluster.yaml up -d
+
 #### install libkafka driver
 1. get and start cygwin64 installation from https://www.cygwin.com/setup-x86_64.exe
 1. install `x86_64-w64-mingw32-gcc` and `pkg-config`
@@ -28,3 +31,5 @@
 #### reference:
 https://github.com/confluentinc/confluent-kafka-go/issues/128
 https://github.com/simplesteph/kafka-stack-docker-compose
+https://3gods.com/bigdata/Kafka-Message-Delivery-Semantics.html#sec-1-4
+https://blog.csdn.net/qq_20641565/article/details/64440425
