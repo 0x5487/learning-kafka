@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
@@ -9,18 +11,14 @@ import (
 )
 
 func main() {
-	fmt.Println("== start order service ==")
 	topic := "order"
+	brokers := "localhost:9092,localhost:9093,localhost:9094"
 
-	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092,localhost:9093,localhost:9094"})
-	if err != nil {
-		panic(err)
-	}
-	defer p.Close()
+	fmt.Println("== start order service ==")
 
 	// receiver from order topic
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers":  "localhost:9092,localhost:9093,localhost:9094",
+		"bootstrap.servers":  brokers,
 		"group.id":           "orderGroup",
 		"enable.auto.commit": "false",
 		"auto.offset.reset":  "earliest",
@@ -57,7 +55,53 @@ func main() {
 		c.Close()
 	}()
 
+	// create topics
+	a, err := kafka.NewAdminClient(&kafka.ConfigMap{"bootstrap.servers": brokers})
+	if err != nil {
+		fmt.Printf("Failed to create Admin client: %s\n", err)
+		os.Exit(1)
+	}
+	maxDur, err := time.ParseDuration("60s")
+	if err != nil {
+		panic("ParseDuration(60s)")
+	}
+	results, err := a.CreateTopics(
+		context.Background(),
+		// Multiple topics can be created simultaneously
+		// by providing more TopicSpecification structs here.
+		[]kafka.TopicSpecification{
+			{
+				Topic:             topic,
+				NumPartitions:     3,
+				ReplicationFactor: 3,
+				Config:            map[string]string{"retention.ms": "604800000"},
+			},
+		},
+		// Admin options
+		kafka.SetAdminOperationTimeout(maxDur))
+	if err != nil {
+		fmt.Printf("Failed to create topic: %v\n", err)
+		os.Exit(1)
+	}
+	// Print results
+	for _, result := range results {
+		fmt.Printf("[create]topic: %s, err: %s\n", result.Topic, result.Error)
+		//kafkaError, ok := result.Error.(kafka.Error)
+		if result.Error.Code() == kafka.ErrTopicAlreadyExists {
+			fmt.Println("topic order already exists")
+		}
+		if result.Error.Code() == kafka.ErrNoError {
+			fmt.Println("create topic success")
+		}
+	}
+
 	// Delivery report handler for produced order message
+	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": brokers})
+	if err != nil {
+		panic(err)
+	}
+	defer p.Close()
+
 	go func() {
 		for e := range p.Events() {
 			switch ev := e.(type) {

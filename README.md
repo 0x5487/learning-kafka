@@ -33,3 +33,8 @@ https://github.com/confluentinc/confluent-kafka-go/issues/128
 https://github.com/simplesteph/kafka-stack-docker-compose
 https://3gods.com/bigdata/Kafka-Message-Delivery-Semantics.html#sec-1-4
 https://blog.csdn.net/qq_20641565/article/details/64440425
+
+https://cutejaneii.wordpress.com/2017/11/22/kafka-6-%E8%A8%AD%E5%AE%9Atopic%E7%9A%84%E5%89%AF%E6%9C%AC%E6%95%B8replication-factor-%E5%88%A9%E7%94%A8server-properties%E9%A0%90%E8%A8%AD%E6%95%B8%E9%87%8F-vs-%E5%BB%BA%E7%AB%8Btopic/
+
+#### Tool:
+http://www.kafkatool.com/features.html
