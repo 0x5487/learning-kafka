@@ -7,11 +7,12 @@ docker-compose --file ./cluster.yaml up -d
 1. get and start cygwin64 installation from https://www.cygwin.com/setup-x86_64.exe
 1. install `x86_64-w64-mingw32-gcc` and `pkg-config`
 1. add `c:\cygwin64\bin` to PATH
-1. et nuget from https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-1. run nuget install librdkafka.redist -Version 1.0.0 ( this is currently the latest version )
-1. copy `.\librdkafka.redist.0.11.4\build\native\include\` into `c:\cygwin64\usr\include\`
-1. copy `.\librdkafka.redist.0.11.4\build\native\lib\win7\x64\win7-x64-Release\v120\librdkafka.lib` into `c:\cygwin64\lib\librdkafka.a` (notice .lib is renamed to .a)
+1. get nuget from https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+1. run `nuget install librdkafka.redist -Version 1.0.0` ( this is currently the latest version )
+1. copy `.\librdkafka.redist.1.0.0\build\native\include\` into `c:\cygwin64\usr\include\`
+1. copy `.\librdkafka.redist.1.0.0\build\native\lib\win7\x64\win7-x64-Release\v120\librdkafka.lib` into `c:\cygwin64\lib\librdkafka.a` (notice .lib is renamed to .a)
 1. copy `librdkafka.dll`, `librdkafkacpp.dll`, `libzstd.dll` and `zlib.dll` from `.\librdkafka.redist.0.11.4\runtimes\win7-x64\native\` to `C:\Windows\System32`
+1. Find/replace `_MSC_VER` with `__MINGW64__` in `C:\cygwin64\usr\include\librdkafka\rdkafka.h`
 1. create file `rdkafka.pc` into `c:\cygwin64\bin` with following content:
     ```
     prefix=c:/
